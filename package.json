@@ -27,13 +27,14 @@
     }
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.5",
     "@babel/eslint-parser": "^7.22.10",
     "@commitlint/cli": "^17.6.7",
     "@commitlint/config-conventional": "^17.6.7",
-    "eslint-config-alloy": "^5.1.0",
-    "md-editor-rt": "^4.2.2",
     "antd": "^5.8.2",
     "axios": "^1.4.0",
+    "eslint-config-alloy": "^5.1.0",
+    "md-editor-rt": "^4.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",

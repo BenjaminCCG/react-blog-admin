@@ -1,39 +1,75 @@
 import React from 'react';
-import { Layout as Layouts } from 'antd';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined
+} from '@ant-design/icons';
+import { Layout, Menu, Button, theme } from 'antd';
 
-const { Header, Sider, Content } = Layouts;
-export default function Layout() {
-  const headerStyle: React.CSSProperties = {
-    textAlign: 'center',
-    color: '#fff',
-    height: 64,
-    paddingInline: 50,
-    lineHeight: '64px',
-    backgroundColor: '#7dbcea'
+const { Header, Sider, Content } = Layout;
+export default function MainLayout() {
+  const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer }
+  } = theme.useToken();
+  const navigate = useNavigate();
+  const menuClick = (e: { key: string }) => {
+    navigate(e.key);
   };
-
-  const contentStyle: React.CSSProperties = {
-    textAlign: 'center',
-    minHeight: 120,
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#108ee9'
-  };
-
-  const siderStyle: React.CSSProperties = {
-    textAlign: 'center',
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#3ba0e9'
-  };
-
   return (
-    <Layouts>
-      <Sider style={siderStyle}>Sider</Sider>
-      <Layouts>
-        <Header style={headerStyle}>Header</Header>
-        <Content style={contentStyle}>Content</Content>
-      </Layouts>
-    </Layouts>
+    <Layout className="h-screen">
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="demo-logo-vertical" />
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['/tech']}
+          onClick={menuClick}
+          items={[
+            {
+              key: '/tech',
+              icon: <UserOutlined />,
+              label: '技术文章'
+            },
+            {
+              key: '/life',
+              icon: <VideoCameraOutlined />,
+              label: '生活杂谈'
+            },
+            {
+              key: '/mine',
+              icon: <UploadOutlined />,
+              label: '自我介绍'
+            }
+          ]}
+        />
+      </Sider>
+      <Layout>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            style={{
+              fontSize: '16px',
+              width: 64,
+              height: 64
+            }}
+          />
+        </Header>
+        <Content
+          style={{
+            margin: '24px 16px',
+            padding: 24,
+            minHeight: 280,
+            background: colorBgContainer
+          }}
+        >
+          <Outlet />
+        </Content>
+      </Layout>
+    </Layout>
   );
 }
