@@ -1,0 +1,66 @@
+{
+  "name": "vite-react-universal-template",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build --mode production",
+    "build:test": "tsc && vite build --mode test",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.ts,.jsx,.tsx --fix",
+    "format": "prettier --write \"./**/*.{html,tsx,ts,js,json,md}\"",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{vue,js,ts,jsx,tsx}": [
+      "pnpm lint",
+      "pnpm prettier"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "./.cz-config.cjs"
+    }
+  },
+  "dependencies": {
+    "@babel/eslint-parser": "^7.22.10",
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7",
+    "eslint-config-alloy": "^5.1.0",
+    "md-editor-rt": "^4.2.2",
+    "antd": "^5.8.2",
+    "axios": "^1.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.1",
+    "vconsole": "^3.15.0",
+    "zustand": "^4.3.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.5",
+    "@types/react-dom": "^18.2.3",
+    "@vitejs/plugin-react": "^4.0.0",
+    "commitizen": "^4.3.0",
+    "cz-customizable": "^7.0.0",
+    "eslint": "^8.39.0",
+    "eslint-config-code-style-lint-react-ts": "^3.0.5",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "prettier": "^2.8.8",
+    "sass": "^1.62.1",
+    "typescript": "^5.0.4",
+    "unplugin-auto-import": "^0.15.3",
+    "unplugin-react-components": "^0.1.4",
+    "vite": "^4.3.5",
+    "vite-plugin-checker": "^0.6.1",
+    "vite-plugin-windicss": "^1.9.0",
+    "windicss": "^3.5.6"
+  }
+}
