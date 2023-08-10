@@ -57,7 +57,6 @@
     "sass": "^1.62.1",
     "typescript": "^5.0.4",
     "unplugin-auto-import": "^0.15.3",
-    "unplugin-react-components": "^0.1.4",
     "vite": "^4.3.5",
     "vite-plugin-checker": "^0.6.1",
     "vite-plugin-windicss": "^1.9.0",

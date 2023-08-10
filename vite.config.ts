@@ -5,7 +5,6 @@ import { resolve } from 'path';
 import checker from 'vite-plugin-checker';
 import WindiCSS from 'vite-plugin-windicss';
 import AutoImport from 'unplugin-auto-import/vite';
-
 // https://vitejs.dev/config/
 export default ({ command, mode }: ConfigEnv) => {
   const currentEnv = loadEnv(mode, process.cwd());
