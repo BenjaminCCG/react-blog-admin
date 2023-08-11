@@ -1,8 +1,8 @@
 import React from 'react';
 import { Space, Table, Button, Modal, FormInstance, message, Upload } from 'antd';
 import { Form, Input, Select } from 'antd';
-import { Tree, Col, Row } from 'antd';
-import type { DataNode, TreeProps } from 'antd/es/tree';
+import { Col, Row } from 'antd';
+
 import type { ColumnsType } from 'antd/es/table';
 import { MdEditor } from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
@@ -10,6 +10,7 @@ import 'md-editor-rt/lib/style.css';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import ClassifyTree from './components/classifyTree';
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
   const reader = new FileReader();
@@ -85,35 +86,6 @@ const data: DataType[] = [
     tags: ['cool', 'teacher']
   }
 ];
-const treeData: DataNode[] = [
-  {
-    title: 'parent 1',
-    key: '0-0',
-    children: [
-      {
-        title: 'parent 1-0',
-        key: '0-0-0',
-        disabled: true,
-        children: [
-          {
-            title: 'leaf',
-            key: '0-0-0-0',
-            disableCheckbox: true
-          },
-          {
-            title: 'leaf',
-            key: '0-0-0-1'
-          }
-        ]
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1',
-        children: [{ title: <span style={{ color: '#1677ff' }}>sss</span>, key: '0-0-1-0' }]
-      }
-    ]
-  }
-];
 export default function Tech() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -153,13 +125,7 @@ export default function Tech() {
       });
     }
   };
-  const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info);
-  };
 
-  const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
-    console.log('onCheck', checkedKeys, info);
-  };
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -170,17 +136,7 @@ export default function Tech() {
     <>
       <Row>
         <Col span={4}>
-          <Button type="primary" onClick={() => setIsModalOpen(true)}>
-            新增分类
-          </Button>
-          <Tree
-            defaultExpandedKeys={['0-0-0', '0-0-1']}
-            defaultSelectedKeys={['0-0-0', '0-0-1']}
-            defaultCheckedKeys={['0-0-0', '0-0-1']}
-            onSelect={onSelect}
-            onCheck={onCheck}
-            treeData={treeData}
-          />
+          <ClassifyTree setIsModalOpen={setIsModalOpen} />
         </Col>
         <Col span={18}>
           <Button type="primary" onClick={() => setIsModalOpen(true)}>
