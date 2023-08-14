@@ -50,9 +50,7 @@ class MyAxios {
       (response) => {
         // resBaseInfo 针对接口返回有基本格式的情况下 如上面导入的resBaseInfo基本请求返回体 基本返回体由rsCode rsCause 和 data构成
         const { data } = response;
-        console.log('data', data);
-        if (data.rsCode !== 0) {
-          alert(`${data.rsCause}`);
+        if (data.code !== 200) {
           return Promise.reject(data.data); // 假设后台的错误信息放在了data中  这里根据情况修改
         }
         if (data instanceof Blob) {
@@ -107,6 +105,7 @@ class MyAxios {
 
   public upload<T = any>(data: Upload): Promise<T> {
     const { url, formData, controller, onUploadProgress } = data;
+
     return this.axiosInstance.post(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,

@@ -1,23 +1,22 @@
 import React from 'react';
 import { Space, Table, Button, Modal, FormInstance, message, Upload } from 'antd';
-import { Form, Input, Select } from 'antd';
-import { Col, Row } from 'antd';
-
+import { Form, Input } from 'antd';
+// import { Col, Row } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { MdEditor } from 'md-editor-rt';
-import 'md-editor-rt/lib/style.css';
-
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
-import ClassifyTree from './components/classifyTree';
-import { fileUpload, queryArticlePage, saveArticle, updateArticle, deleteArticle } from '@/network/api/api';
+import {
+  // fileUpload,
+  queryArticlePage,
+  saveArticle,
+  updateArticle,
+  deleteArticle
+} from '@/network/api/api';
 import { Article } from '@/network/api/api-params-moudle';
-import { useBusinessStore } from '@/store/business';
 import { useSetState, useMount } from 'react-use';
 
-export default function Tech() {
-  const { typeList } = useBusinessStore();
+export default function Life() {
   const [modal, setModal] = useSetState({
     type: 'add',
     data: {},
@@ -153,42 +152,35 @@ export default function Tech() {
     </div>
   );
 
-  const onUploadImg = async (files: File[], callback: (url: string[]) => void) => {
-    const res = await Promise.all(
-      files.map((file) => {
-        return new Promise((rev, rej) => {
-          const form = new FormData();
-          form.append('file', file);
+  // const onUploadImg = async (files: File[], callback: (url: string[]) => void) => {
+  //   const res = await Promise.all(
+  //     files.map((file) => {
+  //       return new Promise((rev, rej) => {
+  //         const form = new FormData();
+  //         form.append('file', file);
 
-          fileUpload(form)
-            .then((res) => {
-              rev(res);
-            })
-            .catch((err) => {
-              rej(err);
-            });
-        });
-      })
-    );
+  //         fileUpload(form)
+  //           .then((res) => {
+  //             rev(res);
+  //           })
+  //           .catch((err) => {
+  //             rej(err);
+  //           });
+  //       });
+  //     })
+  //   );
 
-    callback(res as string[]);
-  };
+  //   callback(res as string[]);
+  // };
   return (
     <>
-      <Row>
-        <Col span={4}>
-          <ClassifyTree />
-        </Col>
-        <Col span={18}>
-          <Button type="primary" onClick={fetchArticleList}>
-            查询
-          </Button>
-          <Button type="primary" onClick={() => setModal({ show: true, type: 'add' })}>
-            新增
-          </Button>
-          <Table columns={columns} dataSource={articleList} rowKey="id" />
-        </Col>
-      </Row>
+      <Button type="primary" onClick={fetchArticleList}>
+        查询
+      </Button>
+      <Button type="primary" onClick={() => setModal({ show: true, type: 'add' })}>
+        新增
+      </Button>
+      <Table columns={columns} dataSource={articleList} rowKey="id" />
 
       <Modal
         title="技术"
@@ -202,9 +194,6 @@ export default function Tech() {
         <Form labelCol={{ span: 2 }} className="w-full" ref={formRef} wrapperCol={{ span: 22 }} layout="horizontal">
           <Form.Item label="标题" name="title">
             <Input />
-          </Form.Item>
-          <Form.Item label="分类" name="typeId">
-            <Select options={typeList} fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
           <Form.Item label="封面">
             <Upload
@@ -222,9 +211,7 @@ export default function Tech() {
           <Form.Item label="简介" name="intro">
             <Input.TextArea />
           </Form.Item>
-          <Form.Item label="内容">
-            <MdEditor modelValue={text} onChange={setText} onUploadImg={onUploadImg} />
-          </Form.Item>
+          <Form.Item label="内容"></Form.Item>
         </Form>
       </Modal>
     </>

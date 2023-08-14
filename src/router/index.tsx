@@ -4,6 +4,7 @@ import { useRoutes } from 'react-router-dom';
 import About from '@/views/About';
 import Layout from '@/layout';
 import Tech from '@/views/Tech';
+import Life from '@/views/Life';
 export default function Router() {
   return useRoutes([
     {
@@ -17,6 +18,10 @@ export default function Router() {
         {
           path: 'tech',
           element: <Tech />
+        },
+        {
+          path: 'life',
+          element: <Life />
         }
       ]
     },

@@ -11,3 +11,10 @@ export interface GetCityTotalNumberModel {
 }
 
 export type GetCityTotal = GetCityTotalNumberModel[];
+
+export interface PageListRes<T> {
+  current?: number;
+  size?: number;
+  total?: number;
+  records?: T[];
+}
