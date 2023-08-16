@@ -1,6 +1,7 @@
 import React from 'react';
 import { Space, Table, Button, Modal, FormInstance, message, Upload } from 'antd';
 import { Form, Input, Select } from 'antd';
+import ImgCrop from 'antd-img-crop';
 import { Col, Row } from 'antd';
 
 import type { ColumnsType } from 'antd/es/table';
@@ -12,7 +13,7 @@ import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import ClassifyTree from './components/classifyTree';
 import { fileUpload, queryArticlePage, saveArticle, updateArticle, deleteArticle } from '@/network/api/api';
-import { Article } from '@/network/api/api-params-moudle';
+import { Article, ArticleType } from '@/network/api/api-params-moudle';
 import { useBusinessStore } from '@/store/business';
 import { useSetState, useMount } from 'react-use';
 
@@ -73,7 +74,10 @@ export default function Tech() {
     {
       title: '分类',
       dataIndex: 'typeId',
-      key: 'typeId'
+      key: 'typeId',
+      render(text) {
+        return <span>{(typeList as ArticleType[])?.find((i) => i.id === text)?.name}</span>;
+      }
     },
     {
       title: '简介',
@@ -132,7 +136,7 @@ export default function Tech() {
       return;
     }
     if (info.file.status === 'done') {
-      setImageUrl(info.file.response.data);
+      setImageUrl(info.file.response.data.url);
     }
   };
 
@@ -171,7 +175,7 @@ export default function Tech() {
       })
     );
 
-    callback(res as string[]);
+    callback(res.map((item: any) => item.url));
   };
   return (
     <>
@@ -207,17 +211,19 @@ export default function Tech() {
             <Select options={typeList} fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
           <Form.Item label="封面">
-            <Upload
-              name="file"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              action={uploadUrl}
-              beforeUpload={beforeUpload}
-              onChange={handleChange}
-            >
-              {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-            </Upload>
+            <ImgCrop quality={1} aspect={2.29 / 1}>
+              <Upload
+                name="file"
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                action={uploadUrl}
+                beforeUpload={beforeUpload}
+                onChange={handleChange}
+              >
+                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+              </Upload>
+            </ImgCrop>
           </Form.Item>
           <Form.Item label="简介" name="intro">
             <Input.TextArea />

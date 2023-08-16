@@ -11,6 +11,7 @@
     "lazy": true,
     "memo": true,
     "startTransition": true,
+    "useBusinessStore": true,
     "useCallback": true,
     "useContext": true,
     "useDebugValue": true,

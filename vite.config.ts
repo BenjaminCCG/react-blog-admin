@@ -66,7 +66,8 @@ export default ({ command, mode }: ConfigEnv) => {
     // 构建
     build: {
       // 构建后是否生成 source map 文件
-      sourcemap: mode !== 'production'
+      sourcemap: mode !== 'production',
+      outDir: 'blog-admin'
       // 打包去掉打印信息 保留debugger vite3需要单独安装terser才行
       // minify: 'terser',
       // terserOptions: {

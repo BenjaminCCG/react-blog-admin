@@ -1,0 +1,29 @@
+# ci.yml
+name: react-blog-admin
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout  ️ # 将代码拉取到虚拟机
+        uses: actions/checkout@v3
+
+      - name: Install and Build # 安装依赖、打包，如果提前已打包好无需这一步
+        run: |
+          yarn install
+          yarn build
+
+      - name: copy dist fil with scp
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.REMOTE_HOST }}
+          username: 'root'
+          password: ${{ secrets.REMOTE_PASSWORD }}
+          port: 22
+          local_path: './blog-admin'
+          remote_path: '/usr/local/nginx/html'
+          sftp_only: true

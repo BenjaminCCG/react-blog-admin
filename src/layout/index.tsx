@@ -18,6 +18,8 @@ export default function MainLayout() {
   const menuClick = (e: { key: string }) => {
     navigate(e.key);
   };
+  const { pathname } = useLocation();
+
   return (
     <Layout className="h-screen">
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -25,7 +27,7 @@ export default function MainLayout() {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['/tech']}
+          defaultSelectedKeys={[pathname]}
           onClick={menuClick}
           items={[
             {

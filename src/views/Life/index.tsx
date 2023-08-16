@@ -1,17 +1,21 @@
 import React from 'react';
 import { Space, Table, Button, Modal, FormInstance, message, Upload } from 'antd';
 import { Form, Input } from 'antd';
-// import { Col, Row } from 'antd';
+import ImgCrop from 'antd-img-crop';
+
+import '@wangeditor/editor/dist/css/style.css';
 import type { ColumnsType } from 'antd/es/table';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import type { UploadChangeParam } from 'antd/es/upload';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import { Editor, Toolbar } from '@wangeditor/editor-for-react';
+import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor';
 import {
   // fileUpload,
-  queryArticlePage,
-  saveArticle,
-  updateArticle,
-  deleteArticle
+  queryLifePage,
+  saveLife,
+  updateLife,
+  deleteLife
 } from '@/network/api/api';
 import { Article } from '@/network/api/api-params-moudle';
 import { useSetState, useMount } from 'react-use';
@@ -22,10 +26,11 @@ export default function Life() {
     data: {},
     show: false
   });
+  const [editor, setEditor] = useState<IDomEditor | null>(null); // TS 语法
+  const [html, setHtml] = useState('');
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
   const formRef = useRef<FormInstance>(null);
-  const [text, setText] = useState('');
   const uploadUrl = import.meta.env.VITE_API_BASE_URL + '/file/upload';
   const searchForm = {
     pageNum: 1,
@@ -34,7 +39,7 @@ export default function Life() {
   const [articleList, setArticleList] = useState<Article[]>([]);
 
   const fetchArticleList = () => {
-    queryArticlePage(searchForm).then((res) => {
+    queryLifePage(searchForm).then((res) => {
       setArticleList(res.records!);
     });
   };
@@ -46,8 +51,8 @@ export default function Life() {
     });
     setTimeout(() => {
       formRef.current?.setFieldsValue(record);
-      setText(record.content!);
       setImageUrl(record.cover!);
+      setHtml(record.content!);
     });
   };
 
@@ -56,7 +61,7 @@ export default function Life() {
       title: '提示',
       content: '确定删除该文章吗？',
       onOk() {
-        deleteArticle(record.id!).then(() => {
+        deleteLife(record.id!).then(() => {
           message.success('删除成功');
           fetchArticleList();
         });
@@ -102,10 +107,10 @@ export default function Life() {
   const handleOk = () => {
     const params = {
       ...formRef.current?.getFieldsValue(),
-      content: text,
+      content: html,
       cover: imageUrl
     };
-    const func = modal.type === 'add' ? saveArticle : updateArticle;
+    const func = modal.type === 'add' ? saveLife : updateLife;
     const data = modal.type === 'add' ? params : { ...modal.data, ...params };
     func(data).then(() => {
       message.success('操作成功');
@@ -131,47 +136,53 @@ export default function Life() {
       return;
     }
     if (info.file.status === 'done') {
-      setImageUrl(info.file.response.data);
+      setImageUrl(info.file.response.data.url);
     }
   };
+  // 工具栏配置
+  const toolbarConfig: Partial<IToolbarConfig> = {}; // TS 语法
+  // const toolbarConfig = { }                        // JS 语法
 
+  // 编辑器配置
+  const editorConfig: Partial<IEditorConfig> = {
+    // TS 语法
+    // const editorConfig = {                         // JS 语法
+    placeholder: '请输入内容...',
+    MENU_CONF: {
+      uploadImage: {
+        fieldName: 'file',
+        server: uploadUrl
+      },
+      uploadVideo: {
+        fieldName: 'file',
+        server: uploadUrl,
+        maxFileSize: 1024 * 1024 * 1024
+      }
+    }
+  };
   useMount(() => {
     fetchArticleList();
   });
   useEffect(() => {
     if (!modal.show) {
       formRef.current?.resetFields();
-      setText('');
+      setHtml('');
       setImageUrl('');
     }
   }, [modal.show]);
+  useEffect(() => {
+    return () => {
+      if (editor === null) return;
+      editor.destroy();
+      setEditor(null);
+    };
+  }, [editor]);
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-
-  // const onUploadImg = async (files: File[], callback: (url: string[]) => void) => {
-  //   const res = await Promise.all(
-  //     files.map((file) => {
-  //       return new Promise((rev, rej) => {
-  //         const form = new FormData();
-  //         form.append('file', file);
-
-  //         fileUpload(form)
-  //           .then((res) => {
-  //             rev(res);
-  //           })
-  //           .catch((err) => {
-  //             rej(err);
-  //           });
-  //       });
-  //     })
-  //   );
-
-  //   callback(res as string[]);
-  // };
   return (
     <>
       <Button type="primary" onClick={fetchArticleList}>
@@ -183,7 +194,7 @@ export default function Life() {
       <Table columns={columns} dataSource={articleList} rowKey="id" />
 
       <Modal
-        title="技术"
+        title="生活"
         width={1200}
         cancelText="取消"
         okText="提交"
@@ -196,22 +207,41 @@ export default function Life() {
             <Input />
           </Form.Item>
           <Form.Item label="封面">
-            <Upload
-              name="file"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              action={uploadUrl}
-              beforeUpload={beforeUpload}
-              onChange={handleChange}
-            >
-              {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-            </Upload>
+            <ImgCrop quality={1} aspect={2.29 / 1}>
+              <Upload
+                name="file"
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                action={uploadUrl}
+                beforeUpload={beforeUpload}
+                onChange={handleChange}
+              >
+                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+              </Upload>
+            </ImgCrop>
           </Form.Item>
           <Form.Item label="简介" name="intro">
             <Input.TextArea />
           </Form.Item>
-          <Form.Item label="内容"></Form.Item>
+          <Form.Item label="内容">
+            <div style={{ border: '1px solid #ccc', zIndex: 100 }}>
+              <Toolbar
+                editor={editor}
+                defaultConfig={toolbarConfig}
+                mode="default"
+                style={{ borderBottom: '1px solid #ccc' }}
+              />
+              <Editor
+                defaultConfig={editorConfig}
+                value={html}
+                onCreated={setEditor}
+                onChange={(editor) => setHtml(editor.getHtml())}
+                mode="default"
+                style={{ height: '500px', overflowY: 'hidden' }}
+              />
+            </div>
+          </Form.Item>
         </Form>
       </Modal>
     </>

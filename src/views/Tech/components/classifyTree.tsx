@@ -89,6 +89,9 @@ export default function ClassifyTree() {
           <Form.Item label="分类名称" name="name">
             <Input />
           </Form.Item>
+          <Form.Item label="排序" name="sort">
+            <Input />
+          </Form.Item>
         </Form>
       </Modal>
     </>

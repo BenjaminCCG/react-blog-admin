@@ -13,7 +13,7 @@ export const getCityTotalNumber = (params: getCanvasData) =>
   request.get<GetCityTotal>(APIS.GET_CITY_TOTAL_NUMBER, params);
 
 export const queryArticlePage = (data: Article & PageListReq) =>
-  request.post<PageListRes<Article>>(APIS.QUERY_ARTICLE_PAGE, data);
+  request.post<PageListRes<Article>>('/article/page', data);
 
 export const saveArticle = (data: Article) => request.post('/article/save', data);
 
@@ -30,3 +30,11 @@ export const saveType = (data: ArticleType) => request.post('/articleType/save',
 export const deleteType = (id: number) => request.post(`/articleType/delete/${id}`);
 
 export const updateType = (data: ArticleType) => request.post('/articleType/update', data);
+
+export const queryLifePage = (data: Article & PageListReq) => request.post<PageListRes<Article>>('/life/page', data);
+
+export const saveLife = (data: Article) => request.post('/life/save', data);
+
+export const deleteLife = (id: number) => request.post(`/life/delete/${id}`);
+
+export const updateLife = (data: Article) => request.post('/life/update', data);
