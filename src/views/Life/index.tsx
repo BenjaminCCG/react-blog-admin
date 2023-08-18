@@ -156,7 +156,8 @@ export default function Life() {
       uploadVideo: {
         fieldName: 'file',
         server: uploadUrl,
-        maxFileSize: 1024 * 1024 * 1024
+        maxFileSize: 1024 * 1024 * 1024,
+        timeout: 600 * 1000
       }
     }
   };
