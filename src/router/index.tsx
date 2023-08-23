@@ -5,11 +5,16 @@ import About from '@/views/About';
 import Layout from '@/layout';
 import Tech from '@/views/Tech';
 import Life from '@/views/Life';
+import Login from '@/views/Login';
 export default function Router() {
   return useRoutes([
     {
       path: '/',
       element: <Navigate to="/tech" />
+    },
+    {
+      path: '/login',
+      element: <Login />
     },
     {
       path: '/',
