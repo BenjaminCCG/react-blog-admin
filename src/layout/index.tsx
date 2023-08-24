@@ -20,6 +20,14 @@ export default function MainLayout() {
   };
   const { pathname } = useLocation();
 
+  const { logout } = useUserStore();
+
+  const outClick = () => {
+    logout().then(() => {
+      navigate('/login');
+    });
+  };
+
   return (
     <Layout className="h-screen">
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -49,7 +57,7 @@ export default function MainLayout() {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header style={{ padding: 0, background: colorBgContainer }} className="flex justify-between">
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -60,13 +68,18 @@ export default function MainLayout() {
               height: 64
             }}
           />
+          <span className="mr-8 cursor-pointer" onClick={outClick}>
+            退出
+          </span>
         </Header>
         <Content
           style={{
             margin: '24px 16px',
             padding: 24,
             minHeight: 280,
-            background: colorBgContainer
+            background: colorBgContainer,
+            overflowY: 'auto',
+            height: 'calc(100vh - 64px - 48px)'
           }}
         >
           <Outlet />

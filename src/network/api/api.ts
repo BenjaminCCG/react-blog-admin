@@ -1,6 +1,6 @@
 import { request } from '@/network/axios';
 import { getCanvasData, Article, PageListReq, ArticleType } from './api-params-moudle';
-import { GetCityTotal, PageListRes } from './api-res-model';
+import { GetCityTotal, PageListRes, UserInfo } from './api-res-model';
 
 /** 这里枚举定义所有接口 */
 enum APIS {
@@ -38,3 +38,6 @@ export const saveLife = (data: Article) => request.post('/life/save', data);
 export const deleteLife = (id: number) => request.post(`/life/delete/${id}`);
 
 export const updateLife = (data: Article) => request.post('/life/update', data);
+
+export const login = (data: { username: string; password: string }) =>
+  request.post<{ token: string, userInfo: UserInfo }>('/user/login', data);

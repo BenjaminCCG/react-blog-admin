@@ -1,14 +1,31 @@
+import { UserInfo } from '@/network/api/api-res-model'
 import { create } from 'zustand'
+import { login } from '@/network/api/api'
 
 interface UserStore {
-  userName: string
-  num: number
-  changeName: () => void
-  changeNum: () => void
+  userInfo: Partial<UserInfo>,
+  token: string,
+  login: (user: Pick<UserInfo, "username" | 'password'>) =>
+    Promise<{ token: string, userInfo: UserInfo }>,
+  logout: () => Promise<void>
 }
 export const useUserStore = create<UserStore>((set) => ({
-  userName: 'LiuJie1998',
-  num: 0,
-  changeName: () => set({ userName: 'laoer536' }),
-  changeNum: () => set((state) => ({ num: state.num + 1 })),
+  userInfo: {},
+  token: '',
+  login: (user) => new Promise(resolve => {
+    login(user).then(res => {
+      set({ userInfo: res.userInfo })
+      set({ token: res.token })
+      localStorage.setItem('token', res.token)
+      resolve(res)
+    })
+  }),
+  logout: () => {
+    return new Promise<void>(resolve => {
+      set({ userInfo: {} })
+      set({ token: '' })
+      localStorage.removeItem('token')
+      resolve()
+    })
+  }
 }))

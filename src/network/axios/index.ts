@@ -4,7 +4,8 @@ import { axiosBaseOptions } from '@/network/axios/axios-setup';
 
 import type { AxiosDownload, Upload, UrlDownload } from '@/network/axios/type';
 import { UploadStream } from '@/network/axios/type';
-
+import { message } from 'antd';
+import { useUserStore } from '@/store/user';
 // 优先采用RFC 5897  让与url直接通过a标签的下载的结果相同
 function analysisFilename(contentDisposition: string): string {
   let regex = /filename\*=\S+?''(.+?)(;|$)/;
@@ -34,7 +35,7 @@ class MyAxios {
         if (token) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          config.headers['authorization'] = `Bearer ${token}`;
+          config.headers['token'] = token;
         }
         console.log(`本次请求的config信息：`, config);
         return config;
@@ -51,6 +52,7 @@ class MyAxios {
         // resBaseInfo 针对接口返回有基本格式的情况下 如上面导入的resBaseInfo基本请求返回体 基本返回体由rsCode rsCause 和 data构成
         const { data } = response;
         if (data.code !== 200) {
+          message.error(data.msg);
           return Promise.reject(data.data); // 假设后台的错误信息放在了data中  这里根据情况修改
         }
         if (data instanceof Blob) {
@@ -63,6 +65,12 @@ class MyAxios {
       (error: AxiosError) => {
         console.log('axios响应拦截部分发生错误，错误信息为', error);
 
+        const { logout } = useUserStore.getState();
+        if (error?.response?.status === 403) {
+          logout().then(() => {
+            window.location.href = '/login'
+          })
+        }
         // 需要对错误进行提示？
         // 以下Message是ElementUI库的全局提示组件 当然我们可以更改
         // 若ElementUI 需要在头部引入   import { Message } from 'element-ui';
