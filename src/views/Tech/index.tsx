@@ -1,7 +1,6 @@
 import React from 'react';
 import { Space, Table, Button, Modal, FormInstance, message } from 'antd';
 import { Form, Input, Select } from 'antd';
-import ImgCrop from 'antd-img-crop';
 import { Col, Row } from 'antd';
 
 import type { ColumnsType } from 'antd/es/table';
@@ -17,6 +16,7 @@ import { useSetState, useMount } from 'react-use';
 
 export default function Tech() {
   const { typeList } = useBusinessStore();
+  const [loading, setLoading] = useState(false);
   const [modal, setModal] = useSetState({
     type: 'add',
     data: {},
@@ -37,7 +37,9 @@ export default function Tech() {
   const [articleList, setArticleList] = useState<Article[]>([]);
 
   const fetchArticleList = () => {
+    setLoading(true);
     queryArticlePage(searchForm).then((res) => {
+      setLoading(false);
       setArticleList(res.records!);
     });
   };
@@ -83,7 +85,8 @@ export default function Tech() {
     {
       title: '简介',
       dataIndex: 'intro',
-      key: 'intro'
+      key: 'intro',
+      ellipsis: true
     },
     {
       title: '发布日期',
@@ -168,7 +171,7 @@ export default function Tech() {
           <Button type="primary" onClick={() => setModal({ show: true, type: 'add' })}>
             新增
           </Button>
-          <Table columns={columns} dataSource={articleList} rowKey="id" />
+          <Table columns={columns} loading={loading} dataSource={articleList} rowKey="id" />
         </Col>
       </Row>
 
@@ -179,6 +182,8 @@ export default function Tech() {
         okText="提交"
         open={modal.show}
         onOk={handleOk}
+        maskClosable={false}
+        keyboard={false}
         onCancel={() => setModal({ show: false })}
       >
         <Form labelCol={{ span: 2 }} className="w-full" ref={formRef} wrapperCol={{ span: 22 }} layout="horizontal">
@@ -189,9 +194,7 @@ export default function Tech() {
             <Select options={typeList} fieldNames={{ label: 'name', value: 'id' }}></Select>
           </Form.Item>
           <Form.Item label="封面">
-            <ImgCrop quality={1} aspect={2.29 / 1}>
-              <UploadFile ref={uploadRef}></UploadFile>
-            </ImgCrop>
+            <UploadFile ref={uploadRef}></UploadFile>
           </Form.Item>
           <Form.Item label="简介" name="intro">
             <Input.TextArea />

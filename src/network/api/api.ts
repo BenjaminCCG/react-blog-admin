@@ -44,7 +44,7 @@ export const getUploadId = (data: FormData) =>
 
 export const fileUpload = (data: FormData) => request.post('/file/upload', data);
 
-export const chunkUpload = (data: FormData) => request.post('/file/chunkUpload', data);
+export const chunkUpload = (data: FormData) => request.post<any[]>('/file/chunkUpload', data);
 
-export const completeUpload = (data: { fileName: string; uploadId: string; partETags: string[] }) =>
+export const completeUpload = (data: { fileName: string; uploadId: string; partETags: any[] }) =>
   request.post<{ url: string }>('/file/completeUpload', data);
