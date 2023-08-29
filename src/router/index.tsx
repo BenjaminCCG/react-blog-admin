@@ -22,12 +22,12 @@ export default function Router() {
         {
           path: 'life',
           element: <Life />
+        },
+        {
+          path: '/about',
+          element: <About />
         }
       ]
-    },
-    {
-      path: '/about',
-      element: <About />
     }
   ]);
 }

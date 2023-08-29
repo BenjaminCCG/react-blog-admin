@@ -41,7 +41,7 @@ export default function MainLayout() {
               label: '生活杂谈'
             },
             {
-              key: '/mine',
+              key: '/about',
               icon: <UploadOutlined />,
               label: '自我介绍'
             }
