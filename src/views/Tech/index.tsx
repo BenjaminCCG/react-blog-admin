@@ -1,5 +1,5 @@
 import React from 'react';
-import { Space, Table, Button, Modal, FormInstance, message, Upload } from 'antd';
+import { Space, Table, Button, Modal, FormInstance, message } from 'antd';
 import { Form, Input, Select } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { Col, Row } from 'antd';
@@ -8,9 +8,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { MdEditor } from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
 
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import type { UploadChangeParam } from 'antd/es/upload';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import UploadFile from '@/components/UploadFile';
 import ClassifyTree from './components/classifyTree';
 import { fileUpload, queryArticlePage, saveArticle, updateArticle, deleteArticle } from '@/network/api/api';
 import { Article, ArticleType } from '@/network/api/api-params-moudle';
@@ -24,11 +22,14 @@ export default function Tech() {
     data: {},
     show: false
   });
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>();
+  const uploadRef = useRef<{
+    imageUrl: string;
+    setImageUrl: (url: string) => void;
+    setLoading: (loading: boolean) => void;
+  }>(null);
+
   const formRef = useRef<FormInstance>(null);
   const [text, setText] = useState('');
-  const uploadUrl = import.meta.env.VITE_API_BASE_URL + '/file/upload';
   const searchForm = {
     pageNum: 1,
     pageSize: 10
@@ -49,7 +50,7 @@ export default function Tech() {
     setTimeout(() => {
       formRef.current?.setFieldsValue(record);
       setText(record.content!);
-      setImageUrl(record.cover!);
+      uploadRef.current?.setImageUrl(record.cover!);
     });
   };
 
@@ -104,11 +105,14 @@ export default function Tech() {
       )
     }
   ];
+
   const handleOk = () => {
+    console.log(uploadRef.current, 'xxx');
+
     const params = {
       ...formRef.current?.getFieldsValue(),
       content: text,
-      cover: imageUrl
+      cover: uploadRef.current!.imageUrl
     };
     const func = modal.type === 'add' ? saveArticle : updateArticle;
     const data = modal.type === 'add' ? params : { ...modal.data, ...params };
@@ -118,27 +122,6 @@ export default function Tech() {
       fetchArticleList();
     });
   };
-  const beforeUpload = (file: RcFile) => {
-    // const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    // if (!isJpgOrPng) {
-    //   message.error('You can only upload JPG/PNG file!');
-    // }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
-    }
-    return isLt2M;
-  };
-
-  const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      setImageUrl(info.file.response.data.url);
-    }
-  };
 
   useMount(() => {
     fetchArticleList();
@@ -147,15 +130,10 @@ export default function Tech() {
     if (!modal.show) {
       formRef.current?.resetFields();
       setText('');
-      setImageUrl('');
+      uploadRef.current?.setLoading(false);
+      uploadRef.current?.setImageUrl('');
     }
   }, [modal.show]);
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
 
   const onUploadImg = async (files: File[], callback: (url: string[]) => void) => {
     const res = await Promise.all(
@@ -212,17 +190,7 @@ export default function Tech() {
           </Form.Item>
           <Form.Item label="封面">
             <ImgCrop quality={1} aspect={2.29 / 1}>
-              <Upload
-                name="file"
-                listType="picture-card"
-                className="avatar-uploader"
-                showUploadList={false}
-                action={uploadUrl}
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-              >
-                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-              </Upload>
+              <UploadFile ref={uploadRef}></UploadFile>
             </ImgCrop>
           </Form.Item>
           <Form.Item label="简介" name="intro">

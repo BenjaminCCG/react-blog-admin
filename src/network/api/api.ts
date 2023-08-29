@@ -21,8 +21,6 @@ export const deleteArticle = (id: number) => request.post(`/article/delete/${id}
 
 export const updateArticle = (data: Article) => request.post('/article/update', data);
 
-export const fileUpload = (data: FormData) => request.post('/file/upload', data);
-
 export const queryTypeList = (data: ArticleType) => request.post<ArticleType[]>('/articleType/list', data);
 
 export const saveType = (data: ArticleType) => request.post('/articleType/save', data);
@@ -40,4 +38,13 @@ export const deleteLife = (id: number) => request.post(`/life/delete/${id}`);
 export const updateLife = (data: Article) => request.post('/life/update', data);
 
 export const login = (data: { username: string; password: string }) =>
-  request.post<{ token: string, userInfo: UserInfo }>('/user/login', data);
+  request.post<{ token: string; userInfo: UserInfo }>('/user/login', data);
+export const getUploadId = (data: FormData) =>
+  request.post<{ uploadId: string; fileName: string }>('/file/getUploadId', data);
+
+export const fileUpload = (data: FormData) => request.post('/file/upload', data);
+
+export const chunkUpload = (data: FormData) => request.post('/file/chunkUpload', data);
+
+export const completeUpload = (data: { fileName: string; uploadId: string; partETags: string[] }) =>
+  request.post<{ url: string }>('/file/completeUpload', data);
