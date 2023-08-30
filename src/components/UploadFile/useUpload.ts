@@ -6,14 +6,14 @@ const CHUNK_SIZE = 1 * 1024 * 1024; // 1MB
 export function useUpload() {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const uploadFile = () => { };
+  const uploadFile = () => {};
 
   const uploadFileChunk = (file: File) => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise<{ url: string }>(async (resolve) => {
       const fileSize = file.size;
       const form = new FormData();
-      form.append('file', file);
+      form.append('fileName', file.name);
       const res = await getUploadId(form);
       const { uploadId, fileName } = res;
       const totalChunks = Math.ceil(fileSize / CHUNK_SIZE);
@@ -33,7 +33,7 @@ export function useUpload() {
         formData.append('partNumber', (i + 1) as any);
         chunkList.push(chunkUpload(formData));
       }
-      const partETags = (await Promise.all(chunkList));
+      const partETags = await Promise.all(chunkList);
       const params = {
         uploadId,
         fileName,
