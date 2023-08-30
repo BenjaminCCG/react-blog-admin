@@ -2,6 +2,7 @@ import React from 'react';
 import { Upload, message } from 'antd';
 import { RcFile, UploadChangeParam, UploadProps, UploadFile as UF } from 'antd/es/upload';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import ImgCrop from 'antd-img-crop';
 
 const UploadFile = forwardRef((_, ref) => {
   const uploadUrl = import.meta.env.VITE_API_BASE_URL + '/file/upload';
@@ -38,17 +39,19 @@ const UploadFile = forwardRef((_, ref) => {
     };
   });
   return (
-    <Upload
-      name="file"
-      listType="picture-card"
-      className="avatar-uploader"
-      showUploadList={false}
-      action={uploadUrl}
-      beforeUpload={beforeUpload}
-      onChange={handleChange}
-    >
-      {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-    </Upload>
+    <ImgCrop quality={1} aspect={2.29 / 1}>
+      <Upload
+        name="file"
+        listType="picture-card"
+        className="avatar-uploader"
+        showUploadList={false}
+        action={uploadUrl}
+        beforeUpload={beforeUpload}
+        onChange={handleChange}
+      >
+        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+      </Upload>
+    </ImgCrop>
   );
 });
 

@@ -18,3 +18,11 @@ export interface PageListRes<T> {
   total?: number;
   records?: T[];
 }
+
+
+export interface UserInfo {
+  id: number;
+  username: string;
+  password: string;
+  avatar: string;
+}

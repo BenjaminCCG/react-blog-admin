@@ -1,6 +1,6 @@
 import { request } from '@/network/axios';
 import { getCanvasData, Article, PageListReq, ArticleType } from './api-params-moudle';
-import { GetCityTotal, PageListRes } from './api-res-model';
+import { GetCityTotal, PageListRes, UserInfo } from './api-res-model';
 
 /** 这里枚举定义所有接口 */
 enum APIS {
@@ -37,12 +37,14 @@ export const deleteLife = (id: number) => request.post(`/life/delete/${id}`);
 
 export const updateLife = (data: Article) => request.post('/life/update', data);
 
+export const login = (data: { username: string; password: string }) =>
+  request.post<{ token: string; userInfo: UserInfo }>('/user/login', data);
 export const getUploadId = (data: FormData) =>
   request.post<{ uploadId: string; fileName: string }>('/file/getUploadId', data);
 
 export const fileUpload = (data: FormData) => request.post('/file/upload', data);
 
-export const chunkUpload = (data: FormData) => request.post('/file/chunkUpload', data);
+export const chunkUpload = (data: FormData) => request.post<any[]>('/file/chunkUpload', data);
 
-export const completeUpload = (data: { fileName: string; uploadId: string; partETags: string[] }) =>
+export const completeUpload = (data: { fileName: string; uploadId: string; partETags: any[] }) =>
   request.post<{ url: string }>('/file/completeUpload', data);

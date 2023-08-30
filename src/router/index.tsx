@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
 // import Home from '@/views/Home';
+import Auth from '@/components/Auth';
 import About from '@/views/About';
 import Layout from '@/layout';
 import Tech from '@/views/Tech';
@@ -18,7 +19,11 @@ export default function Router() {
     },
     {
       path: '/',
-      element: <Layout />,
+      element: (
+        <Auth>
+          <Layout />
+        </Auth>
+      ),
       children: [
         {
           path: 'tech',
