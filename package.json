@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --mode production",
-    "build:test": "tsc && vite build --mode test",
+    "build": "tsc --noEmit && vite build --mode production",
+    "build:test": "tsc --noEmit && vite build --mode test",
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.ts,.jsx,.tsx --fix",
     "format": "prettier --write \"./**/*.{html,tsx,ts,js,json,md}\"",
