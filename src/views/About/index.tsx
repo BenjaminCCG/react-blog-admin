@@ -28,7 +28,7 @@ function About() {
       formData.append('partNumber', (i + 1) as any);
       chunkList.push(chunkUpload(formData));
     }
-    const partETags = (await Promise.all(chunkList)) as string[];
+    const partETags = await Promise.all(chunkList);
     const params = {
       uploadId,
       fileName,
