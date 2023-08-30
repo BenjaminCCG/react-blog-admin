@@ -14,7 +14,7 @@ import {
 } from '@/network/api/api';
 import { Article } from '@/network/api/api-params-moudle';
 import { useSetState, useMount } from 'react-use';
-import { useUpload } from '@/components/UploadFile/useUpload';
+// import { useUpload } from '@/components/UploadFile/useUpload';
 import UploadFile from '@/components/UploadFile';
 import { ColumnsType } from 'antd/es/table';
 
@@ -123,7 +123,7 @@ export default function Life() {
   const toolbarConfig: Partial<IToolbarConfig> = {}; // TS 语法
   // const toolbarConfig = { }                        // JS 语法
 
-  const { uploadFileChunk } = useUpload();
+  // const { uploadFileChunk } = useUpload();
   // 编辑器配置
   const editorConfig: Partial<IEditorConfig> = {
     // TS 语法
@@ -140,13 +140,13 @@ export default function Life() {
       },
       uploadVideo: {
         fieldName: 'file',
-        // server: uploadUrl,
+        server: uploadUrl,
         maxFileSize: 1024 * 1024 * 1024,
-        timeout: 600 * 1000,
-        async customUpload(file: File, insertFn: (url: string) => void) {
-          const res = await uploadFileChunk(file);
-          insertFn(res.url);
-        }
+        timeout: 6000 * 1000
+        // async customUpload(file: File, insertFn: (url: string) => void) {
+        //   const res = await uploadFileChunk(file);
+        //   insertFn(res.url);
+        // }
       }
     }
   };
