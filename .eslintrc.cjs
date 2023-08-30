@@ -34,6 +34,7 @@ module.exports = {
     // https://github.com/vuejs/vue-eslint-parser/issues/104
     // https://github.com/typescript-eslint/typescript-eslint/pull/5318
     '@typescript-eslint/prefer-optional-chain': 'off',
-    '@typescript-eslint/no-require-imports': 'off'
+    '@typescript-eslint/no-require-imports': 'off',
+    '@typescript-eslint/consistent-type-imports': 'off'
   }
 };
