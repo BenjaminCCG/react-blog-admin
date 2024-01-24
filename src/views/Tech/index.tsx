@@ -3,7 +3,7 @@ import { Space, Table, Button, Modal, FormInstance, message } from 'antd';
 import { Form, Input, Select } from 'antd';
 import { Col, Row } from 'antd';
 
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { MdEditor } from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
 
@@ -35,13 +35,23 @@ export default function Tech() {
     pageSize: 10
   };
   const [articleList, setArticleList] = useState<Article[]>([]);
+  const [pagination, setPagination] = useState({
+    total: 0
+  });
 
   const fetchArticleList = () => {
     setLoading(true);
     queryArticlePage(searchForm).then((res) => {
       setLoading(false);
       setArticleList(res.records!);
+      setPagination({
+        total: res.total!
+      });
     });
+  };
+  const pageChange = (page: TablePaginationConfig) => {
+    searchForm.pageNum = page.current!;
+    fetchArticleList();
   };
   const onHandle = (record: Article) => {
     setModal({
@@ -171,7 +181,14 @@ export default function Tech() {
           <Button type="primary" onClick={() => setModal({ show: true, type: 'add' })}>
             新增
           </Button>
-          <Table columns={columns} loading={loading} dataSource={articleList} rowKey="id" />
+          <Table
+            columns={columns}
+            onChange={pageChange}
+            pagination={pagination}
+            loading={loading}
+            dataSource={articleList}
+            rowKey="id"
+          />
         </Col>
       </Row>
 

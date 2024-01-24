@@ -16,7 +16,7 @@ import { Article } from '@/network/api/api-params-moudle';
 import { useSetState, useMount } from 'react-use';
 import { useUpload } from '@/components/UploadFile/useUpload';
 import UploadFile from '@/components/UploadFile';
-import { ColumnsType } from 'antd/es/table';
+import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
 export default function Life() {
   const [loading, setLoading] = useState(false);
@@ -39,13 +39,23 @@ export default function Life() {
     pageSize: 10
   };
   const [articleList, setArticleList] = useState<Article[]>([]);
+  const [pagination, setPagination] = useState({
+    total: 0
+  });
 
   const fetchArticleList = () => {
     setLoading(true);
     queryLifePage(searchForm).then((res) => {
       setLoading(false);
       setArticleList(res.records!);
+      setPagination({
+        total: res.total!
+      });
     });
+  };
+  const pageChange = (page: TablePaginationConfig) => {
+    searchForm.pageNum = page.current!;
+    fetchArticleList();
   };
   const onHandle = (record: Article) => {
     setModal({
@@ -177,7 +187,14 @@ export default function Life() {
       <Button type="primary" onClick={() => setModal({ show: true, type: 'add' })}>
         新增
       </Button>
-      <Table columns={columns} loading={loading} dataSource={articleList} rowKey="id" />
+      <Table
+        columns={columns}
+        loading={loading}
+        onChange={pageChange}
+        pagination={pagination}
+        dataSource={articleList}
+        rowKey="id"
+      />
 
       <Modal
         title="生活"
