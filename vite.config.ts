@@ -49,9 +49,9 @@ export default ({ command, mode }: ConfigEnv) => {
       proxy: {
         // 选项写法
         '/api': {
-          target: 'https://cc-cloud.cn/',
+          target: 'http://localhost:8090',
           changeOrigin: true,
-          // rewrite: (path) => path.replace(/^\/api/, '')
+          rewrite: (path) => path.replace(/^\/api/, '')
         }
       }
     },

@@ -15,6 +15,8 @@ export const getCityTotalNumber = (params: getCanvasData) =>
 export const queryArticlePage = (data: Article & PageListReq) =>
   request.post<PageListRes<Article>>('/article/page', data);
 
+export const queryAboutMe = () => request.post<Article>('/article/queryById', { id: 99999 });
+
 export const saveArticle = (data: Article) => request.post('/article/save', data);
 
 export const deleteArticle = (id: number) => request.post(`/article/delete/${id}`);
